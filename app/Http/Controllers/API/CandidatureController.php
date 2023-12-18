@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Candidature;
+use App\Models\Formation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,8 +64,17 @@ class CandidatureController extends Controller
     /**
      * Accepte or denie.
      */
+    public function acceptDenieCandidature(string $candidature_id, string $etat)
+    {
+        $candidature = Candidature::findOrFail($candidature_id);
+        $candidature->etat_candidature = $etat;
+        $candidature->save();
 
-    
+        return response()->json([
+            'Message' => 'Good Modifie Cadidature',
+        ]);
+    }
+
 
     /**
      * Display the specified resource.

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class FormationController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */

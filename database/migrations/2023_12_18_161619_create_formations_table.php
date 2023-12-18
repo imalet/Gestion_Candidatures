@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titre');
             $table->string('description');
-            $table->date('date_fin_candidature')->default('')->nullable();
+            $table->date('date_fin_candidature')->nullable();
             $table->timestamps();
         });
     }

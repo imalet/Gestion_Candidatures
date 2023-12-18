@@ -25,13 +25,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-
-
-
 Route::controller(AuthController::class)->group(function () {
 
-    Route::post('register', 'register');
-    Route::post('login', 'login');
+    Route::post('/register', 'register');
+    Route::post('/login', 'login');
 
     Route::middleware('api')->group(function () {
         Route::get('/logout', 'logout');
@@ -52,7 +49,7 @@ Route::controller(FormationController::class)->group(function () {
 
 Route::controller(CandidatureController::class)->group(function () {
     Route::middleware('auth:api')->group(function () {
-    Route::get('/formation/cadidature/{id_formation}', 'store');
-    Route::get('//formation/cadidature/{etat}');
+        Route::get('/formation/cadidature/{id_formation}', 'store');
     });
+    Route::get('/formation/etat/cadidature/{formation}/{etat}', 'acceptDenieCandidature');
 });

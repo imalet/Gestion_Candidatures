@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Formation::class)->constrained()->cascadeOnDelete();
-            $table->enum('etat_candidature',['accepte', 'refuser', 'en attente']);
+            $table->enum('etat_candidature',['accepte', 'refuser', 'en attente'])->default('en attente')->nullable(false);
             $table->timestamps();
         });
     }
