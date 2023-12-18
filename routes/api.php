@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CandidatureController;
 use App\Http\Controllers\API\FormationController;
+use App\Http\Controllers\API\VoteController;
+use App\Models\Candidature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,19 +40,19 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(FormationController::class)->group(function () {
 
-    Route::get('/formation/lister', 'index');
     Route::get('/formation/detail/{id_formation}', 'show');
+    Route::get('/formation/lister', 'index');
 
-    Route::middleware('api')->group(function () {
+    Route::middleware('auth:api')->group(function () {
         Route::post('/formation/ajouter', 'store');
         Route::post('/formation/modifier/{id_formation}', 'update');
         Route::get('/formation/supprimer/{id_formation}', 'destroy');
     });
 });
 
-Route::controller()->group(function () {
-
-    Route::middleware('api')->group(function () {
-        Route::post('/formation/ajouter', 'store');
+Route::controller(CandidatureController::class)->group(function () {
+    Route::middleware('auth:api')->group(function () {
+    Route::get('/formation/cadidature/{id_formation}', 'store');
+    Route::get('//formation/cadidature/{etat}');
     });
 });
