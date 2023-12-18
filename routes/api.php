@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\FormationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,11 +23,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
 
-Route::get('/logout', [AuthController::class, 'logout'])->middleware('api');
 
-Route::get('/o', function () {
-    return response()->json(['Message' => 'Tu es Connecté'], 200);
-})->middleware('auth:api');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+    Route::middleware('api')->group(function () {
+        Route::get('/logout', 'logout');
+    });
+});
+
+Route::controller(FormationController::class)->group(function(){
+    Route::get('/formation/lister', 'index');
+    Route::get('/formation/detail/{id_formation}', 'show');
+    Route::post('/formation/ajouter', 'store');
+    Route::post('/formation/modifier/{id_formation}', 'update');
+    Route::get('/formation/supprimer/{id_formation}', 'destroy');
+});
