@@ -26,17 +26,30 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::controller(AuthController::class)->group(function () {
+
     Route::post('register', 'register');
     Route::post('login', 'login');
+
     Route::middleware('api')->group(function () {
         Route::get('/logout', 'logout');
     });
 });
 
-Route::controller(FormationController::class)->group(function(){
+Route::controller(FormationController::class)->group(function () {
+
     Route::get('/formation/lister', 'index');
     Route::get('/formation/detail/{id_formation}', 'show');
-    Route::post('/formation/ajouter', 'store');
-    Route::post('/formation/modifier/{id_formation}', 'update');
-    Route::get('/formation/supprimer/{id_formation}', 'destroy');
+
+    Route::middleware('api')->group(function () {
+        Route::post('/formation/ajouter', 'store');
+        Route::post('/formation/modifier/{id_formation}', 'update');
+        Route::get('/formation/supprimer/{id_formation}', 'destroy');
+    });
+});
+
+Route::controller()->group(function () {
+
+    Route::middleware('api')->group(function () {
+        Route::post('/formation/ajouter', 'store');
+    });
 });
