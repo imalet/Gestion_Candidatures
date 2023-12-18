@@ -15,6 +15,7 @@ class AuthController extends Controller
      * Register
      */
 
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -55,16 +56,31 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $token = $request->user()->createToken('MyToken');
+        if ($token = Auth::attempt($credentials)) {
+            // $token = $request->user()->createToken('MyToken');
 
-            return response()->json([
-                'Message' => 'User dans la base',
-                'Token' => $token->plainTextToken,
-                'Role Utilisateur' => $request->user()->role
-            ], 200);
+            // return response()->json([
+            //     'Message' => 'User dans la base',
+            //     // 'Token' => $token->plainTextToken,
+            //     'Role Utilisateur' => $request->user()->role
+            // ], 200);
+            return $this->respondWithToken($token);
         }
 
         return response()->json(['Message' => 'User pas dans la base'], 401);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    public function logout(){
+        auth()->logout();
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }
