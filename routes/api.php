@@ -33,25 +33,26 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(FormationController::class)->group(function () {
     
-    Route::get('/formation/lister', 'index');
-    Route::get('/formation/detail/{id_formation}', 'show');
+    Route::get('/formations', 'index');
+    Route::get('/formation/{id}', 'show');
 
+    
     Route::middleware(['auth:api', 'IsAdmin'])->group(function () {
-        Route::post('/formation/ajouter', 'store');
-        Route::post('/formation/modifier/{id_formation}', 'update');
-        Route::get('/formation/supprimer/{id_formation}', 'destroy');
+        Route::post('/formations', 'store');
+        Route::patch('/formation/{id}', 'update');
+        Route::delete('/formation{id}', 'destroy');
     });
 });
 
 Route::controller(CandidatureController::class)->group(function () {
 
     Route::middleware('IsCandidat')->group(function () {
-        Route::get('/formation/cadidature/{id_formation}', 'store');
+        Route::get('/cadidature/{id}', 'store');
     });
     Route::middleware('auth:api', 'IsAdmin')->group(function () {
-        Route::get('/formation/candidature', 'index');
-        Route::get('/formation/etat/cadidature/{formation}/{etat}', 'acceptDenieCandidature');
-        Route::get('/formation/candidature/accepter', 'candidatureAccepter');
-        Route::get('/formation/candidature/refuser', 'candidatureRefuser');
+        Route::get('/candidatures', 'index');
+        Route::get('/candidatures/accepter', 'candidatureAccepter');
+        Route::get('/candidatures/refuser', 'candidatureRefuser');
+        Route::patch('/candidatures/{candidature_id}/{etat}', 'acceptDenieCandidature');
     });
 });

@@ -1,0 +1,654 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "APIs For Thrift Store",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Inscription d'un nouvel utilisateur",
+                "description": "Point de terminaison pour l'inscription d'un utilisateur.",
+                "operationId": "enregistrerUtilisateur",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "email",
+                                    "motDePasse"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    },
+                                    "motDePasse": {
+                                        "type": "string",
+                                        "minLength": 4
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inscription réussie"
+                    },
+                    "400": {
+                        "description": "Requête incorrecte"
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Authentification de l'utilisateur",
+                "description": "Point de terminaison pour l'authentification d'un utilisateur.",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 4
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authentification réussie"
+                    },
+                    "401": {
+                        "description": "Utilisateur non trouvé dans la base de données"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion de l'utilisateur",
+                "description": "Point de terminaison pour la déconnexion de l'utilisateur.",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Déconnexion réussie"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                }
+            }
+        },
+        "/candidatures": {
+            "get": {
+                "tags": [
+                    "Candidature"
+                ],
+                "summary": "Liste toutes les candidatures",
+                "description": "Point de terminaison pour récupérer toutes les candidatures.",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "ID de l'utilisateur",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "formation_id",
+                        "in": "query",
+                        "description": "ID de la formation",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "etat_candidature",
+                        "in": "query",
+                        "description": "État de la candidature (attente, accepte, refuse)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "attente",
+                                "accepte",
+                                "refuse"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste de toutes les candidatures",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Candidatures filtrées",
+                                    "Candidatures": [
+                                        {
+                                            "id": 1,
+                                            "nom": "Nom1",
+                                            "email": "email1@example.com"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "nom": "Nom2",
+                                            "email": "email2@example.com"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                }
+            }
+        },
+        "/candidatures/acceptees": {
+            "get": {
+                "tags": [
+                    "Candidature"
+                ],
+                "summary": "Liste des candidatures acceptées",
+                "description": "Point de terminaison pour récupérer les candidatures acceptées.",
+                "operationId": "candidatureAccepter",
+                "responses": {
+                    "200": {
+                        "description": "Liste des candidatures acceptées",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Candidatures acceptées",
+                                    "Candidatures": [
+                                        {
+                                            "id": 1,
+                                            "nom": "Nom1",
+                                            "email": "email1@example.com"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "nom": "Nom2",
+                                            "email": "email2@example.com"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                }
+            }
+        },
+        "/candidatures/refusees": {
+            "get": {
+                "tags": [
+                    "Candidature"
+                ],
+                "summary": "Liste des candidatures refusées",
+                "description": "Point de terminaison pour récupérer les candidatures refusées.",
+                "operationId": "candidatureRefuser",
+                "responses": {
+                    "200": {
+                        "description": "Liste des candidatures refusées",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Candidatures refusées",
+                                    "Candidatures": [
+                                        {
+                                            "id": 1,
+                                            "nom": "Nom1",
+                                            "email": "email1@example.com"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "nom": "Nom2",
+                                            "email": "email2@example.com"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                }
+            }
+        },
+        "/candidatures/{id_formation}": {
+            "post": {
+                "tags": [
+                    "Candidature"
+                ],
+                "summary": "Enregistre une candidature pour une formation",
+                "description": "Point de terminaison pour enregistrer une candidature pour une formation spécifiée.",
+                "operationId": "store",
+                "parameters": [
+                    {
+                        "name": "id_formation",
+                        "in": "path",
+                        "description": "ID de la formation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enregistrement de la candidature réussi",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Enregistrement de la candidature réussi",
+                                    "id_formation": "123",
+                                    "user_id": "456"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Vous avez déjà candidaté à cette formation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Vous avez déjà candidaté à cette formation"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "500": {
+                        "description": "Échec de l'enregistrement de la candidature"
+                    }
+                }
+            }
+        },
+        "/candidatures/{candidature_id}/{etat}": {
+            "get": {
+                "tags": [
+                    "Candidature"
+                ],
+                "summary": "Modifier l'état d'une candidature",
+                "description": "Point de terminaison pour modifier l'état (accepter/refuser) d'une candidature spécifiée.",
+                "operationId": "acceptDenieCandidature",
+                "parameters": [
+                    {
+                        "name": "candidature_id",
+                        "in": "path",
+                        "description": "ID de la candidature",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "etat",
+                        "in": "path",
+                        "description": "État de la candidature (accepte, refuse)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "accepte",
+                                "refuse"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Modification de l'état de la candidature réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Good Modifie Cadidature"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    },
+                    "404": {
+                        "description": "Candidature non trouvée"
+                    }
+                }
+            }
+        },
+        "/formations": {
+            "get": {
+                "tags": [
+                    "Formation"
+                ],
+                "summary": "Liste toutes les formations",
+                "description": "Point de terminaison pour récupérer la liste de toutes les formations.",
+                "operationId": "index()",
+                "responses": {
+                    "200": {
+                        "description": "Liste de toutes les formations",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "formations": [
+                                        {
+                                            "id": 1,
+                                            "nom": "Formation 1"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "nom": "Formation 2"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Formation"
+                ],
+                "summary": "Enregistre une nouvelle formation",
+                "description": "Point de terminaison pour enregistrer une nouvelle formation.",
+                "operationId": "store()",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "date_fin_candidature": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Enregistrement effectué avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Enregistrement effectué avec succès"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation échouée",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "errors": {
+                                        "titre": [
+                                            "Le champ titre est requis."
+                                        ],
+                                        "description": [
+                                            "Le champ description est requis."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Enregistrement échoué"
+                    }
+                }
+            }
+        },
+        "/formations/{id}": {
+            "get": {
+                "tags": [
+                    "Formation"
+                ],
+                "summary": "Affiche les détails d'une formation",
+                "description": "Point de terminaison pour afficher les détails d'une formation.",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la formation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de la formation",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "formations": {
+                                        "id": 1,
+                                        "titre": "Formation 1",
+                                        "description": "Description de la formation",
+                                        "date_fin_candidature": "2023-01-01"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Formation non trouvée"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la récupération des détails"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Formation"
+                ],
+                "summary": "Mise à jour d'une formation existante",
+                "description": "Point de terminaison pour mettre à jour une formation existante.",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la formation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "date_fin_candidature": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mise à jour effectuée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "message": "Mise à jour effectuée avec succès"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation échouée",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "errors": {
+                                        "titre": [
+                                            "Le champ titre est requis."
+                                        ],
+                                        "description": [
+                                            "Le champ description est requis."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Formation non trouvée"
+                    },
+                    "500": {
+                        "description": "Échec de la mise à jour"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Formation"
+                ],
+                "summary": "Suppression d'une formation",
+                "description": "Point de terminaison pour supprimer une formation existante.",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la formation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formation supprimée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Supprimé"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Formation non trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "Message": "Connais pas"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Échec de la suppression"
+                    }
+                }
+            }
+        }
+    }
+}

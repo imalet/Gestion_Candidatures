@@ -9,9 +9,23 @@ use Illuminate\Support\Facades\Validator;
 
 class FormationController extends Controller
 {
-    
+
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/formations",
+     *     tags={"Formation"},
+     *     operationId="index()",
+     *     summary="Liste toutes les formations",
+     *     description="Point de terminaison pour récupérer la liste de toutes les formations.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste de toutes les formations",
+     *         @OA\JsonContent(
+     *             example={"formations": {{"id": 1, "nom": "Formation 1"}, {"id": 2, "nom": "Formation 2"}}}
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé")
+     * )
      */
     public function index()
     {
@@ -29,7 +43,37 @@ class FormationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/formations",
+     *     tags={"Formation"},
+     *     operationId="store()",
+     *     summary="Enregistre une nouvelle formation",
+     *     description="Point de terminaison pour enregistrer une nouvelle formation.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="titre", type="string", maxLength=255),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="date_fin_candidature", type="string", format="date", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Enregistrement effectué avec succès",
+     *         @OA\JsonContent(
+     *             example={"message": "Enregistrement effectué avec succès"}
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation échouée",
+     *         @OA\JsonContent(
+     *             example={"errors": {"titre": {"Le champ titre est requis."}, "description": {"Le champ description est requis."}}}
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Enregistrement échoué")
+     * )
      */
     public function store(Request $request)
     {
@@ -60,7 +104,29 @@ class FormationController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/formations/{id}",
+     *     tags={"Formation"},
+     *     operationId="show",
+     *     summary="Affiche les détails d'une formation",
+     *     description="Point de terminaison pour afficher les détails d'une formation.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la formation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Détails de la formation",
+     *         @OA\JsonContent(
+     *             example={"formations": {"id": 1, "titre": "Formation 1", "description": "Description de la formation", "date_fin_candidature": "2023-01-01"}}
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Formation non trouvée"),
+     *     @OA\Response(response=500, description="Erreur lors de la récupération des détails")
+     * )
      */
     public function show(string $id)
     {
@@ -76,7 +142,45 @@ class FormationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/formations/{id}",
+     *     tags={"Formation"},
+     *     operationId="update",
+     *     summary="Mise à jour d'une formation existante",
+     *     description="Point de terminaison pour mettre à jour une formation existante.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la formation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="titre", type="string", maxLength=255),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="date_fin_candidature", type="string", format="date", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mise à jour effectuée avec succès",
+     *         @OA\JsonContent(
+     *             example={"message": "Mise à jour effectuée avec succès"}
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation échouée",
+     *         @OA\JsonContent(
+     *             example={"errors": {"titre": {"Le champ titre est requis."}, "description": {"Le champ description est requis."}}}
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Formation non trouvée"),
+     *     @OA\Response(response=500, description="Échec de la mise à jour")
+     * )
      */
     public function update(Request $request, string $id)
     {
@@ -108,7 +212,29 @@ class FormationController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/formations/{id}",
+     *     tags={"Formation"},
+     *     operationId="destroy",
+     *     summary="Suppression d'une formation",
+     *     description="Point de terminaison pour supprimer une formation existante.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID de la formation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Formation supprimée avec succès",
+     *         @OA\JsonContent(
+     *             example={"Message": "Supprimé"}
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Formation non trouvée", @OA\JsonContent(example={"Message": "Connais pas"})),
+     *     @OA\Response(response=500, description="Échec de la suppression")
+     * )
      */
     public function destroy(string $id)
     {
