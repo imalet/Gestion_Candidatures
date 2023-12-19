@@ -15,7 +15,37 @@ class CandidatureController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'Message' => 'Toutes les Candidatures',
+            'Candidatures' => Candidature::all()
+        ]);
+    }
+
+    /**
+     * Display a specifique resource.
+     */
+    // public function etatCandidature($status)
+    // {
+    //     return response()->json([
+    //         'Message' => 'Toutes les Candidatures',
+    //         'Candidatures' => Candidature::where('etat_candidature', $status)->get()
+    //     ]);
+    // }
+
+    public function candidatureAccepter()
+    {
+        return response()->json([
+            'Message' => 'Toutes les Candidatures',
+            'Candidatures' => Candidature::where('etat_candidature', 'accepte')->get()
+        ]);
+    }
+
+    public function candidatureRefuser()
+    {
+        return response()->json([
+            'Message' => 'Toutes les Candidatures',
+            'Candidatures' => Candidature::where('etat_candidature', 'refuser')->get()
+        ]);
     }
 
     /**
